@@ -31,9 +31,7 @@ impl SessionManager {
     pub fn create_session(&mut self, config: SessionConfig) -> AegisResult<SessionId> {
         let mut session = ValidationSession::new(config);
         let id = session.id.clone();
-        session
-            .activate()
-            .map_err(AegisError::Session)?;
+        session.activate().map_err(AegisError::Session)?;
         self.sessions.insert(id.to_string(), session);
         Ok(id)
     }
@@ -91,9 +89,10 @@ impl SessionManager {
         }
 
         // Update session state
-        let session = self.sessions.get_mut(session_id).ok_or_else(|| {
-            AegisError::NotFound(format!("session not found: {}", session_id))
-        })?;
+        let session = self
+            .sessions
+            .get_mut(session_id)
+            .ok_or_else(|| AegisError::NotFound(format!("session not found: {}", session_id)))?;
 
         session.context.append_chunk(chunk);
         session.total_chunks_processed += 1;
@@ -114,9 +113,7 @@ impl SessionManager {
             .get_mut(session_id)
             .ok_or_else(|| AegisError::NotFound(format!("session not found: {}", session_id)))?;
 
-        session
-            .complete()
-            .map_err(AegisError::Session)?;
+        session.complete().map_err(AegisError::Session)?;
         Ok(())
     }
 

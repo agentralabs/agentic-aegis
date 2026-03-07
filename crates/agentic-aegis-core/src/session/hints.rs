@@ -16,7 +16,10 @@ impl CorrectionHintGenerator {
         let msg = error.message.to_lowercase();
 
         // Bracket mismatch hints
-        if msg.contains("bracket") || msg.contains("unexpected '}'") || msg.contains("unexpected ')'") {
+        if msg.contains("bracket")
+            || msg.contains("unexpected '}'")
+            || msg.contains("unexpected ')'")
+        {
             return Some(self.bracket_hint(&msg, code_context));
         }
 
@@ -41,16 +44,19 @@ impl CorrectionHintGenerator {
         }
 
         // Security hints
-        if msg.contains("hardcoded") && (msg.contains("password") || msg.contains("secret") || msg.contains("key")) {
-            return Some("use environment variables or a secret manager instead of hardcoded values".to_string());
+        if msg.contains("hardcoded")
+            && (msg.contains("password") || msg.contains("secret") || msg.contains("key"))
+        {
+            return Some(
+                "use environment variables or a secret manager instead of hardcoded values"
+                    .to_string(),
+            );
         }
 
         // Default hint based on severity
         match error.severity {
             ValidationSeverity::Error => Some("fix the error before continuing".to_string()),
-            ValidationSeverity::Warning => {
-                Some("consider addressing this warning".to_string())
-            }
+            ValidationSeverity::Warning => Some("consider addressing this warning".to_string()),
             _ => None,
         }
     }
@@ -71,8 +77,7 @@ impl CorrectionHintGenerator {
         if msg.contains("unexpected '}'") {
             "remove the extra closing brace or add a matching opening brace".to_string()
         } else if msg.contains("unexpected ')'") {
-            "remove the extra closing parenthesis or add a matching opening parenthesis"
-                .to_string()
+            "remove the extra closing parenthesis or add a matching opening parenthesis".to_string()
         } else if msg.contains("unexpected ']'") {
             "remove the extra closing bracket or add a matching opening bracket".to_string()
         } else if msg.contains("mismatched") {

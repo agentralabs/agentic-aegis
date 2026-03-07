@@ -85,10 +85,7 @@ impl PromptInjectionDetector {
 
         for pattern in &self.patterns {
             if pattern.pattern.is_match(input) {
-                let evidence = pattern
-                    .pattern
-                    .find(input)
-                    .map(|m| m.as_str().to_string());
+                let evidence = pattern.pattern.find(input).map(|m| m.as_str().to_string());
 
                 issues.push(
                     SecurityIssue::new(

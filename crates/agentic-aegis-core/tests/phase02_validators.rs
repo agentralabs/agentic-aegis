@@ -343,7 +343,10 @@ async fn test_semantic_validator_duplicate_function() {
     let ctx = make_context(Language::Rust);
     let code = "fn foo() {}\nfn bar() {}\nfn foo() {}\n";
     let result = v.validate_chunk(&ctx, code).await.unwrap();
-    assert!(result.warnings.iter().any(|w| w.message.contains("duplicate")));
+    assert!(result
+        .warnings
+        .iter()
+        .any(|w| w.message.contains("duplicate")));
 }
 
 #[tokio::test]
@@ -352,7 +355,10 @@ async fn test_semantic_validator_duplicate_python() {
     let ctx = make_context(Language::Python);
     let code = "def foo():\n    pass\ndef bar():\n    pass\ndef foo():\n    pass\n";
     let result = v.validate_chunk(&ctx, code).await.unwrap();
-    assert!(result.warnings.iter().any(|w| w.message.contains("duplicate")));
+    assert!(result
+        .warnings
+        .iter()
+        .any(|w| w.message.contains("duplicate")));
 }
 
 #[tokio::test]

@@ -19,10 +19,7 @@ pub extern "C" fn aegis_validate_code(
 }
 
 #[no_mangle]
-pub extern "C" fn aegis_check_input_safe(
-    _input: *const u8,
-    _input_len: usize,
-) -> i32 {
+pub extern "C" fn aegis_check_input_safe(_input: *const u8, _input_len: usize) -> i32 {
     // Returns 1 for safe, 0 for unsafe
     1
 }

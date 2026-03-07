@@ -12,12 +12,12 @@ pub async fn handle_check_input(
     args: &Value,
     session: &Arc<Mutex<McpSessionManager>>,
 ) -> McpResult<ToolCallResult> {
-    let input = args
-        .get("input")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| McpError::InvalidParams {
-            message: "input is required".to_string(),
-        })?;
+    let input =
+        args.get("input")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| McpError::InvalidParams {
+                message: "input is required".to_string(),
+            })?;
 
     let check_type = args
         .get("check_type")
@@ -101,12 +101,12 @@ pub async fn handle_check_output(
     args: &Value,
     session: &Arc<Mutex<McpSessionManager>>,
 ) -> McpResult<ToolCallResult> {
-    let output = args
-        .get("output")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| McpError::InvalidParams {
-            message: "output is required".to_string(),
-        })?;
+    let output =
+        args.get("output")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| McpError::InvalidParams {
+                message: "output is required".to_string(),
+            })?;
 
     let check_type = args
         .get("check_type")
@@ -128,7 +128,10 @@ pub async fn handle_check_output(
                 })
             })
             .collect();
-        result_obj.insert("pii_found".to_string(), serde_json::json!(pii_matches.len()));
+        result_obj.insert(
+            "pii_found".to_string(),
+            serde_json::json!(pii_matches.len()),
+        );
         result_obj.insert("pii_matches".to_string(), serde_json::json!(pii_details));
     }
 
@@ -150,10 +153,7 @@ pub async fn handle_check_output(
             "was_modified".to_string(),
             serde_json::json!(sanitized.was_modified),
         );
-        result_obj.insert(
-            "actions".to_string(),
-            serde_json::json!(sanitized.actions),
-        );
+        result_obj.insert("actions".to_string(), serde_json::json!(sanitized.actions));
         result_obj.insert(
             "sanitized_content".to_string(),
             serde_json::json!(sanitized.content),
@@ -173,12 +173,12 @@ pub async fn handle_scan_security(
     args: &Value,
     session: &Arc<Mutex<McpSessionManager>>,
 ) -> McpResult<ToolCallResult> {
-    let code = args
-        .get("code")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| McpError::InvalidParams {
-            message: "code is required".to_string(),
-        })?;
+    let code =
+        args.get("code")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| McpError::InvalidParams {
+                message: "code is required".to_string(),
+            })?;
 
     let language_str = args
         .get("language")

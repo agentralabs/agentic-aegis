@@ -47,6 +47,15 @@ The current fixes do not work. Linters run after generation -- they cannot catch
 
 **AgenticAegis** provides streaming validation -- a live shield that analyzes code as it is being generated. Not "lint your output." Your agent has a **guardian** -- token-level syntax validation, type flow tracking, shadow compilation, prompt injection detection, and PII scanning -- all running in parallel with generation.
 
+<a name="quickstart"></a>
+
+## Quickstart
+
+```bash
+cargo install agentic-aegis-cli
+aegis --help
+```
+
 <a name="problems-solved"></a>
 
 ## Problems Solved (Read This First)
@@ -168,6 +177,10 @@ cargo install --path crates/agentic-aegis-cli
 
 ```bash
 curl -fsSL https://agentralabs.tech/install/aegis | bash
+```
+
+```bash
+npm install @agenticamem/aegis
 ```
 
 **Standalone guarantee:** AgenticAegis operates fully standalone. No other sister, external service, or orchestrator is required.

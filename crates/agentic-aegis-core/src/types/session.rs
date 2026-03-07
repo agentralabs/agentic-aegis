@@ -4,8 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::ids::SessionId;
 use super::validation::{Language, ValidationContext, ValidationResult};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum SessionState {
     #[default]
     Created,
@@ -42,7 +41,6 @@ impl SessionState {
         )
     }
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SessionConfig {
@@ -120,10 +118,7 @@ impl ValidationSession {
             self.updated_at = Utc::now();
             Ok(())
         } else {
-            Err(format!(
-                "cannot transition from {:?} to Active",
-                self.state
-            ))
+            Err(format!("cannot transition from {:?} to Active", self.state))
         }
     }
 
@@ -133,10 +128,7 @@ impl ValidationSession {
             self.updated_at = Utc::now();
             Ok(())
         } else {
-            Err(format!(
-                "cannot transition from {:?} to Paused",
-                self.state
-            ))
+            Err(format!("cannot transition from {:?} to Paused", self.state))
         }
     }
 
@@ -159,10 +151,7 @@ impl ValidationSession {
             self.updated_at = Utc::now();
             Ok(())
         } else {
-            Err(format!(
-                "cannot transition from {:?} to Failed",
-                self.state
-            ))
+            Err(format!("cannot transition from {:?} to Failed", self.state))
         }
     }
 

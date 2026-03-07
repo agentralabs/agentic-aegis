@@ -76,10 +76,7 @@ impl PayloadScanner {
         for pattern in &self.patterns {
             for (line_idx, line) in input.lines().enumerate() {
                 if pattern.pattern.is_match(line) {
-                    let evidence = pattern
-                        .pattern
-                        .find(line)
-                        .map(|m| m.as_str().to_string());
+                    let evidence = pattern.pattern.find(line).map(|m| m.as_str().to_string());
 
                     issues.push(
                         SecurityIssue::new(

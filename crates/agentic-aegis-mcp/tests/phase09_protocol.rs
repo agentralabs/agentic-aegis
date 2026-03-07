@@ -54,7 +54,10 @@ async fn test_protocol_list_resources() {
     });
     let response = handler.handle_request(request).await;
     assert_eq!(response["id"], 3);
-    assert!(response["result"]["resources"].as_array().unwrap().is_empty());
+    assert!(response["result"]["resources"]
+        .as_array()
+        .unwrap()
+        .is_empty());
 }
 
 #[tokio::test]
@@ -176,7 +179,9 @@ async fn test_protocol_full_validation_flow() {
         }
     });
     let create_resp = handler.handle_request(create).await;
-    let text = create_resp["result"]["content"][0]["text"].as_str().unwrap();
+    let text = create_resp["result"]["content"][0]["text"]
+        .as_str()
+        .unwrap();
     let parsed: serde_json::Value = serde_json::from_str(text).unwrap();
     let session_id = parsed["session_id"].as_str().unwrap().to_string();
 

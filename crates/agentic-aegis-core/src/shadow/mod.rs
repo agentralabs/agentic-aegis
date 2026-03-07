@@ -10,8 +10,7 @@ pub use tracker::EffectTracker;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ResourceUsage {
     pub memory_bytes: u64,
     pub cpu_time_ms: u64,
@@ -19,7 +18,6 @@ pub struct ResourceUsage {
     pub disk_bytes_written: u64,
     pub disk_bytes_read: u64,
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResourceLimits {
@@ -34,10 +32,10 @@ impl Default for ResourceLimits {
     fn default() -> Self {
         Self {
             max_memory_bytes: 256 * 1024 * 1024, // 256 MB
-            max_cpu_time_ms: 10_000,              // 10 seconds
-            max_wall_time_ms: 30_000,             // 30 seconds
-            max_disk_bytes: 64 * 1024 * 1024,     // 64 MB
-            max_output_bytes: 1024 * 1024,         // 1 MB
+            max_cpu_time_ms: 10_000,             // 10 seconds
+            max_wall_time_ms: 30_000,            // 30 seconds
+            max_disk_bytes: 64 * 1024 * 1024,    // 64 MB
+            max_output_bytes: 1024 * 1024,       // 1 MB
         }
     }
 }

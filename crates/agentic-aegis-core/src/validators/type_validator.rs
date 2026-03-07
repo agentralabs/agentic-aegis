@@ -127,16 +127,21 @@ impl TypeValidator {
             let trimmed = line.trim();
 
             // Check for null assignment to non-nullable
-            if trimmed.contains("= null") && !trimmed.contains("| null") && !trimmed.contains("?:")
-                && (trimmed.contains(": string") || trimmed.contains(": number") || trimmed.contains(": boolean")) {
-                    errors.push(
-                        ValidationError::warning(format!(
-                            "possible null assignment to non-nullable type at line {}",
-                            idx + 1
-                        ))
-                        .with_location(idx + 1, 1),
-                    );
-                }
+            if trimmed.contains("= null")
+                && !trimmed.contains("| null")
+                && !trimmed.contains("?:")
+                && (trimmed.contains(": string")
+                    || trimmed.contains(": number")
+                    || trimmed.contains(": boolean"))
+            {
+                errors.push(
+                    ValidationError::warning(format!(
+                        "possible null assignment to non-nullable type at line {}",
+                        idx + 1
+                    ))
+                    .with_location(idx + 1, 1),
+                );
+            }
         }
     }
 
@@ -177,11 +182,7 @@ impl TypeValidator {
         let total_lines = code.lines().count();
         let typed_lines: usize = code
             .lines()
-            .filter(|line| {
-                relevant_patterns
-                    .iter()
-                    .any(|p| p.pattern.is_match(line))
-            })
+            .filter(|line| relevant_patterns.iter().any(|p| p.pattern.is_match(line)))
             .count();
 
         if total_lines > 20 && typed_lines == 0 {

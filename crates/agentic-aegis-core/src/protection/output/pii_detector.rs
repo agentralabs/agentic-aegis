@@ -40,8 +40,10 @@ impl PiiDetector {
                 kind: PiiKind::IpAddress,
             },
             PiiPattern {
-                pattern: Regex::new(r#"(?i)(?:api[_-]?key|apikey)\s*[:=]\s*['"]?[a-zA-Z0-9_-]{20,}['"]?"#)
-                    .unwrap_or_else(|_| Regex::new(r"$^").expect("fallback")),
+                pattern: Regex::new(
+                    r#"(?i)(?:api[_-]?key|apikey)\s*[:=]\s*['"]?[a-zA-Z0-9_-]{20,}['"]?"#,
+                )
+                .unwrap_or_else(|_| Regex::new(r"$^").expect("fallback")),
                 kind: PiiKind::ApiKey,
             },
             PiiPattern {
@@ -143,7 +145,14 @@ fn mask_value(value: &str, kind: &PiiKind) -> String {
         }
         PiiKind::CreditCard => {
             if value.len() > 4 {
-                let last_four = value.chars().rev().take(4).collect::<String>().chars().rev().collect::<String>();
+                let last_four = value
+                    .chars()
+                    .rev()
+                    .take(4)
+                    .collect::<String>()
+                    .chars()
+                    .rev()
+                    .collect::<String>();
                 format!("****-****-****-{}", last_four)
             } else {
                 "****".to_string()

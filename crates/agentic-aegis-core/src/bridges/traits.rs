@@ -23,11 +23,7 @@ pub trait ContractBridge {
         Ok(true)
     }
 
-    fn report_validation_result(
-        &self,
-        _session_id: &str,
-        _passed: bool,
-    ) -> Result<(), String> {
+    fn report_validation_result(&self, _session_id: &str, _passed: bool) -> Result<(), String> {
         Ok(())
     }
 }
@@ -43,11 +39,7 @@ pub trait IdentityBridge {
 }
 
 pub trait MemoryBridge {
-    fn store_validation_context(
-        &self,
-        _session_id: &str,
-        _context: &str,
-    ) -> Result<(), String> {
+    fn store_validation_context(&self, _session_id: &str, _context: &str) -> Result<(), String> {
         Ok(())
     }
 
@@ -67,19 +59,11 @@ pub trait CognitionBridge {
 }
 
 pub trait CommBridge {
-    fn broadcast_validation_event(
-        &self,
-        _event_type: &str,
-        _payload: &str,
-    ) -> Result<(), String> {
+    fn broadcast_validation_event(&self, _event_type: &str, _payload: &str) -> Result<(), String> {
         Ok(())
     }
 
-    fn notify_validation_failure(
-        &self,
-        _session_id: &str,
-        _error: &str,
-    ) -> Result<(), String> {
+    fn notify_validation_failure(&self, _session_id: &str, _error: &str) -> Result<(), String> {
         Ok(())
     }
 }
@@ -101,10 +85,7 @@ pub trait VisionBridge {
 }
 
 pub trait PlanningBridge {
-    fn register_validation_constraint(
-        &self,
-        _constraint: &str,
-    ) -> Result<(), String> {
+    fn register_validation_constraint(&self, _constraint: &str) -> Result<(), String> {
         Ok(())
     }
 

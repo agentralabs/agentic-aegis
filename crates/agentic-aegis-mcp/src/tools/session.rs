@@ -20,7 +20,10 @@ pub async fn handle_session_create(
         })?;
 
     let language = Language::from_str_loose(language_str);
-    let file_path = args.get("file_path").and_then(|v| v.as_str()).map(String::from);
+    let file_path = args
+        .get("file_path")
+        .and_then(|v| v.as_str())
+        .map(String::from);
     let max_errors = args
         .get("max_errors")
         .and_then(|v| v.as_u64())
@@ -35,12 +38,13 @@ pub async fn handle_session_create(
     };
 
     let mut guard = session.lock().await;
-    let session_id = guard
-        .core
-        .create_session(config)
-        .map_err(|e| McpError::ToolExecutionError {
-            message: e.to_string(),
-        })?;
+    let session_id =
+        guard
+            .core
+            .create_session(config)
+            .map_err(|e| McpError::ToolExecutionError {
+                message: e.to_string(),
+            })?;
 
     let result = serde_json::json!({
         "session_id": session_id.to_string(),
@@ -131,7 +135,9 @@ pub async fn handle_session_end(
         })?;
 
     let mut result = info;
-    if let Some(o) = result.as_object_mut() { o.insert("state".to_string(), serde_json::json!("Completed")); }
+    if let Some(o) = result.as_object_mut() {
+        o.insert("state".to_string(), serde_json::json!("Completed"));
+    }
 
     Ok(ToolCallResult::success(
         serde_json::to_string_pretty(&result).map_err(|e| McpError::InternalError {
@@ -159,12 +165,11 @@ pub async fn handle_rollback(
     let guard = session.lock().await;
 
     let snapshot = match target {
-        "latest" => guard
-            .rollback_engine
-            .rollback_to_latest()
-            .map_err(|e| McpError::ToolExecutionError {
+        "latest" => guard.rollback_engine.rollback_to_latest().map_err(|e| {
+            McpError::ToolExecutionError {
                 message: e.to_string(),
-            })?,
+            }
+        })?,
         "chunk" => {
             let chunk_index = args
                 .get("value")
@@ -181,10 +186,7 @@ pub async fn handle_rollback(
                 })?
         }
         _ => {
-            let snapshot_id = args
-                .get("value")
-                .and_then(|v| v.as_str())
-                .unwrap_or(target);
+            let snapshot_id = args.get("value").and_then(|v| v.as_str()).unwrap_or(target);
             guard
                 .rollback_engine
                 .rollback_to(snapshot_id)

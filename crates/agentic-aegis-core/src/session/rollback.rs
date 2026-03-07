@@ -47,10 +47,7 @@ impl RollbackEngine {
             .find(|s| s.snapshot.chunk_index <= chunk_index)
             .map(|s| &s.snapshot)
             .ok_or_else(|| {
-                AegisError::Rollback(format!(
-                    "no snapshot found for chunk index {}",
-                    chunk_index
-                ))
+                AegisError::Rollback(format!("no snapshot found for chunk index {}", chunk_index))
             })
     }
 

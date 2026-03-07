@@ -54,11 +54,8 @@ fn bench_session_snapshot(c: &mut Criterion) {
 fn bench_validation_context_append(c: &mut Criterion) {
     c.bench_function("validation_context_append_chunk", |b| {
         b.iter(|| {
-            let mut ctx = ValidationContext::new(
-                SessionId::new(),
-                Language::Rust,
-                "bench.rs".into(),
-            );
+            let mut ctx =
+                ValidationContext::new(SessionId::new(), Language::Rust, "bench.rs".into());
             for _ in 0..50 {
                 ctx.append_chunk(black_box("let x = 42;\n"));
             }
@@ -70,8 +67,7 @@ fn bench_validation_context_append(c: &mut Criterion) {
 fn bench_cache_insert(c: &mut Criterion) {
     c.bench_function("cache_insert_100", |b| {
         b.iter(|| {
-            let cache: LruCache<String, String> =
-                LruCache::new(256, Duration::from_secs(300));
+            let cache: LruCache<String, String> = LruCache::new(256, Duration::from_secs(300));
             for i in 0..100 {
                 cache.insert(format!("key_{}", i), format!("val_{}", i));
             }
@@ -110,7 +106,15 @@ fn bench_cache_get_miss(c: &mut Criterion) {
 
 fn bench_language_parse(c: &mut Criterion) {
     c.bench_function("language_from_str_loose", |b| {
-        let inputs = ["rust", "python", "javascript", "typescript", "go", "java", "unknown_lang"];
+        let inputs = [
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "go",
+            "java",
+            "unknown_lang",
+        ];
         b.iter(|| {
             for input in &inputs {
                 black_box(Language::from_str_loose(input));

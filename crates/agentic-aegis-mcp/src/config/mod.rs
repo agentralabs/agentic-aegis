@@ -30,8 +30,7 @@ pub fn load_config() -> ServerConfig {
     let autosave = std::env::var("AGENTIC_AEGIS_AUTOSAVE")
         .map(|v| v != "false" && v != "0")
         .unwrap_or(true);
-    let log_level =
-        std::env::var("AGENTIC_AEGIS_LOG_LEVEL").unwrap_or_else(|_| "info".to_string());
+    let log_level = std::env::var("AGENTIC_AEGIS_LOG_LEVEL").unwrap_or_else(|_| "info".to_string());
 
     ServerConfig {
         mode,

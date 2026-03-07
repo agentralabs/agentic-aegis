@@ -69,10 +69,7 @@ async fn test_session_manager_validate_multiple_chunks() {
         .unwrap();
     assert!(r2.valid);
 
-    let r3 = mgr
-        .validate_chunk(&id.to_string(), "}\n")
-        .await
-        .unwrap();
+    let r3 = mgr.validate_chunk(&id.to_string(), "}\n").await.unwrap();
     assert!(r3.valid);
 }
 

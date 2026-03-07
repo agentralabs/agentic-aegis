@@ -74,8 +74,13 @@ impl Default for RateLimiter {
 
 #[derive(Debug, Clone)]
 pub enum RateLimitResult {
-    Allowed { remaining: usize },
-    Limited { retry_after_ms: u64, remaining: usize },
+    Allowed {
+        remaining: usize,
+    },
+    Limited {
+        retry_after_ms: u64,
+        remaining: usize,
+    },
 }
 
 impl RateLimitResult {

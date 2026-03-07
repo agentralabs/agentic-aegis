@@ -25,13 +25,8 @@ impl SandboxExecutor {
         &self.limits
     }
 
-    pub async fn execute(
-        &self,
-        code: &str,
-        language: &Language,
-    ) -> AegisResult<ExecutionResult> {
-        let temp_dir =
-            TempDir::new().map_err(|e| crate::types::AegisError::Io(e.to_string()))?;
+    pub async fn execute(&self, code: &str, language: &Language) -> AegisResult<ExecutionResult> {
+        let temp_dir = TempDir::new().map_err(|e| crate::types::AegisError::Io(e.to_string()))?;
         let start = Instant::now();
 
         let result = match language {
@@ -77,11 +72,7 @@ impl SandboxExecutor {
         }
     }
 
-    async fn execute_python(
-        &self,
-        code: &str,
-        temp_dir: &TempDir,
-    ) -> AegisResult<ExecutionResult> {
+    async fn execute_python(&self, code: &str, temp_dir: &TempDir) -> AegisResult<ExecutionResult> {
         let src_path = temp_dir.path().join("main.py");
         std::fs::write(&src_path, code)?;
 
@@ -95,9 +86,7 @@ impl SandboxExecutor {
                 .output(),
         )
         .await
-        .map_err(|_| {
-            crate::types::AegisError::Timeout("python execution timed out".to_string())
-        })?
+        .map_err(|_| crate::types::AegisError::Timeout("python execution timed out".to_string()))?
         .map_err(|e| crate::types::AegisError::ShadowExecution(e.to_string()))?;
 
         let exit_code = output.status.code().unwrap_or(-1);
@@ -142,11 +131,7 @@ impl SandboxExecutor {
         })
     }
 
-    async fn execute_rust(
-        &self,
-        code: &str,
-        temp_dir: &TempDir,
-    ) -> AegisResult<ExecutionResult> {
+    async fn execute_rust(&self, code: &str, temp_dir: &TempDir) -> AegisResult<ExecutionResult> {
         let src_path = temp_dir.path().join("main.rs");
         std::fs::write(&src_path, code)?;
 
@@ -171,13 +156,10 @@ impl SandboxExecutor {
         let timeout = std::time::Duration::from_millis(self.limits.max_wall_time_ms);
         let binary = temp_dir.path().join("main");
 
-        let output = tokio::time::timeout(
-            timeout,
-            tokio::process::Command::new(&binary).output(),
-        )
-        .await
-        .map_err(|_| crate::types::AegisError::Timeout("rust execution timed out".to_string()))?
-        .map_err(|e| crate::types::AegisError::ShadowExecution(e.to_string()))?;
+        let output = tokio::time::timeout(timeout, tokio::process::Command::new(&binary).output())
+            .await
+            .map_err(|_| crate::types::AegisError::Timeout("rust execution timed out".to_string()))?
+            .map_err(|e| crate::types::AegisError::ShadowExecution(e.to_string()))?;
 
         let exit_code = output.status.code().unwrap_or(-1);
         Ok(ExecutionResult {

@@ -1,8 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Default)]
 pub enum ThreatLevel {
     #[default]
     None,
@@ -41,7 +40,6 @@ impl ThreatLevel {
         matches!(self, ThreatLevel::High | ThreatLevel::Critical)
     }
 }
-
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SecurityCategory {
@@ -145,11 +143,7 @@ impl SecurityScan {
         }
     }
 
-    pub fn with_issues(
-        issues: Vec<SecurityIssue>,
-        lines_scanned: usize,
-        duration_ms: u64,
-    ) -> Self {
+    pub fn with_issues(issues: Vec<SecurityIssue>, lines_scanned: usize, duration_ms: u64) -> Self {
         let overall_threat = issues
             .iter()
             .map(|i| i.threat_level)

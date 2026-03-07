@@ -1,11 +1,11 @@
-use agentic_aegis_core::session::SessionManager as CoreSessionManager;
 use agentic_aegis_core::protection::{
     CodeSafetyAnalyzer, ContentFilter, IntentVerifier, OutputSanitizer, PayloadScanner,
     PiiDetector, PromptInjectionDetector, RateLimiter,
 };
-use agentic_aegis_core::session::RollbackEngine;
-use agentic_aegis_core::shadow::{EffectTracker, SandboxExecutor, ShadowCompiler};
 use agentic_aegis_core::session::CorrectionHintGenerator;
+use agentic_aegis_core::session::RollbackEngine;
+use agentic_aegis_core::session::SessionManager as CoreSessionManager;
+use agentic_aegis_core::shadow::{EffectTracker, SandboxExecutor, ShadowCompiler};
 
 pub struct McpSessionManager {
     pub core: CoreSessionManager,

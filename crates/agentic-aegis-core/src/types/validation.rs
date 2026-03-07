@@ -2,8 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::ids::{SessionId, ValidationId};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Language {
     Rust,
     Python,
@@ -58,7 +57,6 @@ impl Language {
         }
     }
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ValidationContext {

@@ -16,7 +16,9 @@ impl IntentVerifier {
         let code_lower = actual_code.to_lowercase();
 
         // Check for file operations not in intent
-        if (code_lower.contains("write") || code_lower.contains("delete") || code_lower.contains("remove"))
+        if (code_lower.contains("write")
+            || code_lower.contains("delete")
+            || code_lower.contains("remove"))
             && !intent_lower.contains("file")
             && !intent_lower.contains("write")
             && !intent_lower.contains("delete")
@@ -27,7 +29,10 @@ impl IntentVerifier {
         }
 
         // Check for network operations not in intent
-        if (code_lower.contains("http") || code_lower.contains("socket") || code_lower.contains("fetch") || code_lower.contains("request"))
+        if (code_lower.contains("http")
+            || code_lower.contains("socket")
+            || code_lower.contains("fetch")
+            || code_lower.contains("request"))
             && !intent_lower.contains("network")
             && !intent_lower.contains("http")
             && !intent_lower.contains("api")
@@ -39,7 +44,9 @@ impl IntentVerifier {
         }
 
         // Check for process operations not in intent
-        if (code_lower.contains("exec") || code_lower.contains("spawn") || code_lower.contains("system("))
+        if (code_lower.contains("exec")
+            || code_lower.contains("spawn")
+            || code_lower.contains("system("))
             && !intent_lower.contains("process")
             && !intent_lower.contains("execute")
             && !intent_lower.contains("command")
@@ -50,7 +57,9 @@ impl IntentVerifier {
         }
 
         // Check for crypto/security operations
-        if (code_lower.contains("encrypt") || code_lower.contains("decrypt") || code_lower.contains("hash"))
+        if (code_lower.contains("encrypt")
+            || code_lower.contains("decrypt")
+            || code_lower.contains("hash"))
             && !intent_lower.contains("encrypt")
             && !intent_lower.contains("hash")
             && !intent_lower.contains("crypto")

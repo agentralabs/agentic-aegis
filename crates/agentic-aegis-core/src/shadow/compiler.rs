@@ -3,7 +3,6 @@ use tempfile::TempDir;
 
 use crate::types::{AegisResult, Language};
 
-
 pub struct ShadowCompiler;
 
 impl ShadowCompiler {
@@ -11,11 +10,7 @@ impl ShadowCompiler {
         Self
     }
 
-    pub async fn compile(
-        &self,
-        code: &str,
-        language: &Language,
-    ) -> AegisResult<CompileResult> {
+    pub async fn compile(&self, code: &str, language: &Language) -> AegisResult<CompileResult> {
         let start = Instant::now();
         let temp_dir = TempDir::new().map_err(|e| crate::types::AegisError::Io(e.to_string()))?;
 
@@ -121,11 +116,7 @@ impl ShadowCompiler {
         }
     }
 
-    async fn check_javascript(
-        &self,
-        code: &str,
-        temp_dir: &TempDir,
-    ) -> AegisResult<CompileResult> {
+    async fn check_javascript(&self, code: &str, temp_dir: &TempDir) -> AegisResult<CompileResult> {
         let start = Instant::now();
         let src_path = temp_dir.path().join("main.js");
         std::fs::write(&src_path, code)?;

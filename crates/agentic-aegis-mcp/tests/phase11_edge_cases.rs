@@ -105,7 +105,12 @@ async fn edge_tool_call_null_arguments() {
 #[tokio::test]
 async fn edge_tool_call_empty_arguments() {
     let session = make_session();
-    let result = ToolRegistry::call("aegis_confidence_score", Some(serde_json::json!({})), &session).await;
+    let result = ToolRegistry::call(
+        "aegis_confidence_score",
+        Some(serde_json::json!({})),
+        &session,
+    )
+    .await;
     // Missing required params should return error content, not panic
     assert!(result.is_ok());
     let val = result.unwrap();
@@ -119,7 +124,8 @@ async fn edge_tool_call_wrong_type_arguments() {
         "aegis_session_create",
         Some(serde_json::json!({"language": 42})), // number instead of string
         &session,
-    ).await;
+    )
+    .await;
     // Should handle type mismatch gracefully
     assert!(result.is_ok());
     let val = result.unwrap();
@@ -136,7 +142,8 @@ async fn edge_validate_streaming_invalid_session() {
             "chunk": "fn main() {}"
         })),
         &session,
-    ).await;
+    )
+    .await;
     assert!(result.is_ok());
     let val = result.unwrap();
     assert!(val.get("isError").is_some());
@@ -151,7 +158,9 @@ async fn edge_session_end_already_ended() {
         "aegis_session_create",
         Some(serde_json::json!({"language": "rust"})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let text = create_result["content"][0]["text"].as_str().unwrap();
     let parsed: serde_json::Value = serde_json::from_str(text).unwrap();
     let session_id = parsed["session_id"].as_str().unwrap();
@@ -161,14 +170,16 @@ async fn edge_session_end_already_ended() {
         "aegis_session_end",
         Some(serde_json::json!({"session_id": session_id})),
         &session,
-    ).await;
+    )
+    .await;
 
     // Try to end again — should return error
     let result = ToolRegistry::call(
         "aegis_session_end",
         Some(serde_json::json!({"session_id": session_id})),
         &session,
-    ).await;
+    )
+    .await;
     assert!(result.is_ok());
     let val = result.unwrap();
     assert!(val.get("isError").is_some());
@@ -184,7 +195,8 @@ async fn edge_rollback_empty_session() {
             "target": "latest"
         })),
         &session,
-    ).await;
+    )
+    .await;
     assert!(result.is_ok());
     let val = result.unwrap();
     assert!(val.get("isError").is_some());
@@ -201,7 +213,9 @@ async fn edge_check_input_empty() {
         "aegis_check_input",
         Some(serde_json::json!({"input": ""})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let text = result["content"][0]["text"].as_str().unwrap();
     assert!(text.contains("\"safe\": true"));
 }
@@ -213,7 +227,9 @@ async fn edge_check_output_empty() {
         "aegis_check_output",
         Some(serde_json::json!({"output": ""})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     assert!(!result["content"][0]["text"].as_str().unwrap().is_empty());
 }
 
@@ -224,7 +240,9 @@ async fn edge_scan_security_empty_code() {
         "aegis_scan_security",
         Some(serde_json::json!({"code": "", "language": "rust"})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let text = result["content"][0]["text"].as_str().unwrap();
     assert!(text.contains("\"is_safe\": true"));
 }
@@ -236,7 +254,9 @@ async fn edge_confidence_score_empty_code() {
         "aegis_confidence_score",
         Some(serde_json::json!({"code": "", "language": "rust"})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let text = result["content"][0]["text"].as_str().unwrap();
     assert!(text.contains("confidence"));
 }
@@ -251,7 +271,9 @@ async fn edge_correction_hint_empty_error() {
             "language": "rust"
         })),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let text = result["content"][0]["text"].as_str().unwrap();
     assert!(text.contains("hint"));
 }
@@ -268,7 +290,9 @@ async fn stress_rapid_session_create_end() {
             "aegis_session_create",
             Some(serde_json::json!({"language": "rust"})),
             &session,
-        ).await.unwrap();
+        )
+        .await
+        .unwrap();
         let text = create_result["content"][0]["text"].as_str().unwrap();
         let parsed: serde_json::Value = serde_json::from_str(text).unwrap();
         let sid = parsed["session_id"].as_str().unwrap();
@@ -277,7 +301,8 @@ async fn stress_rapid_session_create_end() {
             "aegis_session_end",
             Some(serde_json::json!({"session_id": sid})),
             &session,
-        ).await;
+        )
+        .await;
     }
 }
 
@@ -290,7 +315,9 @@ async fn stress_rapid_validate_complete() {
             "aegis_validate_complete",
             Some(serde_json::json!({"code": code, "language": "rust"})),
             &session,
-        ).await.unwrap();
+        )
+        .await
+        .unwrap();
         assert!(result["content"][0]["text"].as_str().is_some());
     }
 }
@@ -304,7 +331,9 @@ async fn stress_rapid_security_scans() {
             "aegis_scan_security",
             Some(serde_json::json!({"code": code, "language": "rust"})),
             &session,
-        ).await.unwrap();
+        )
+        .await
+        .unwrap();
         let text = result["content"][0]["text"].as_str().unwrap();
         assert!(text.contains("is_safe"));
     }
@@ -319,7 +348,9 @@ async fn stress_full_streaming_session() {
         "aegis_session_create",
         Some(serde_json::json!({"language": "rust"})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let text = create["content"][0]["text"].as_str().unwrap();
     let parsed: serde_json::Value = serde_json::from_str(text).unwrap();
     let sid = parsed["session_id"].as_str().unwrap().to_string();
@@ -353,7 +384,9 @@ async fn stress_full_streaming_session() {
             "aegis_validate_streaming",
             Some(serde_json::json!({"session_id": &sid, "chunk": chunk})),
             &session,
-        ).await.unwrap();
+        )
+        .await
+        .unwrap();
         assert!(result["content"][0]["text"].as_str().is_some());
     }
 
@@ -362,7 +395,9 @@ async fn stress_full_streaming_session() {
         "aegis_session_status",
         Some(serde_json::json!({"session_id": &sid})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let status_text = status["content"][0]["text"].as_str().unwrap();
     let status_parsed: serde_json::Value = serde_json::from_str(status_text).unwrap();
     assert_eq!(status_parsed["total_chunks"].as_u64().unwrap(), 20);
@@ -372,7 +407,9 @@ async fn stress_full_streaming_session() {
         "aegis_session_end",
         Some(serde_json::json!({"session_id": &sid})),
         &session,
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
     let end_text = end["content"][0]["text"].as_str().unwrap();
     assert!(end_text.contains("Completed"));
 }

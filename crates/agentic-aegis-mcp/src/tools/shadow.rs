@@ -12,12 +12,12 @@ pub async fn handle_shadow_execute(
     args: &Value,
     session: &Arc<Mutex<McpSessionManager>>,
 ) -> McpResult<ToolCallResult> {
-    let code = args
-        .get("code")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| McpError::InvalidParams {
-            message: "code is required".to_string(),
-        })?;
+    let code =
+        args.get("code")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| McpError::InvalidParams {
+                message: "code is required".to_string(),
+            })?;
 
     let language_str = args
         .get("language")
@@ -48,13 +48,11 @@ pub async fn handle_shadow_execute(
     }
 
     // Execute in sandbox
-    let result = guard
-        .executor
-        .execute(code, &language)
-        .await
-        .map_err(|e| McpError::ToolExecutionError {
+    let result = guard.executor.execute(code, &language).await.map_err(|e| {
+        McpError::ToolExecutionError {
             message: e.to_string(),
-        })?;
+        }
+    })?;
 
     let response = serde_json::json!({
         "success": result.success,

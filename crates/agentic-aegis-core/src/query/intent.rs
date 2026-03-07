@@ -4,11 +4,12 @@ use serde::{Deserialize, Serialize};
 ///
 /// Ordered from cheapest (fewest tokens) to most expensive.
 /// Default is `IdsOnly` to be maximally token-conservative.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub enum ExtractionIntent {
     /// Only check if the item exists. Cheapest possible query.
     Exists,
     /// Return only identifiers. Default and very cheap.
+    #[default]
     IdsOnly,
     /// Return a compact summary (key fields only).
     Summary,
@@ -39,12 +40,6 @@ impl ExtractionIntent {
     /// Whether this is a minimal (token-conservative) intent.
     pub fn is_minimal(&self) -> bool {
         matches!(self, ExtractionIntent::Exists | ExtractionIntent::IdsOnly)
-    }
-}
-
-impl Default for ExtractionIntent {
-    fn default() -> Self {
-        ExtractionIntent::IdsOnly
     }
 }
 
@@ -116,10 +111,21 @@ mod tests {
 
     #[test]
     fn test_estimated_tokens_ordering() {
-        assert!(ExtractionIntent::Exists.estimated_tokens() < ExtractionIntent::IdsOnly.estimated_tokens());
-        assert!(ExtractionIntent::IdsOnly.estimated_tokens() < ExtractionIntent::Summary.estimated_tokens());
-        assert!(ExtractionIntent::Summary.estimated_tokens() < ExtractionIntent::Fields.estimated_tokens());
-        assert!(ExtractionIntent::Fields.estimated_tokens() < ExtractionIntent::Full.estimated_tokens());
+        assert!(
+            ExtractionIntent::Exists.estimated_tokens()
+                < ExtractionIntent::IdsOnly.estimated_tokens()
+        );
+        assert!(
+            ExtractionIntent::IdsOnly.estimated_tokens()
+                < ExtractionIntent::Summary.estimated_tokens()
+        );
+        assert!(
+            ExtractionIntent::Summary.estimated_tokens()
+                < ExtractionIntent::Fields.estimated_tokens()
+        );
+        assert!(
+            ExtractionIntent::Fields.estimated_tokens() < ExtractionIntent::Full.estimated_tokens()
+        );
     }
 
     #[test]

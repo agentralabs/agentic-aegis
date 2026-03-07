@@ -89,6 +89,7 @@ impl ToolCallResult {
     }
 
     pub fn to_value(&self) -> Value {
-        serde_json::to_value(self).unwrap_or_else(|_| serde_json::json!({"error": "serialization failed"}))
+        serde_json::to_value(self)
+            .unwrap_or_else(|_| serde_json::json!({"error": "serialization failed"}))
     }
 }

@@ -150,9 +150,16 @@ impl SemanticValidator {
                 let trimmed = lines[i].trim();
                 if trimmed.starts_with(ret) {
                     let next = lines.get(i + 1).map_or("", |l| l.trim());
-                    if !next.is_empty() && next != "}" && !next.starts_with("//") && !next.starts_with('#') {
+                    if !next.is_empty()
+                        && next != "}"
+                        && !next.starts_with("//")
+                        && !next.starts_with('#')
+                    {
                         warnings.push(ValidationWarning {
-                            message: format!("possible unreachable code after return at line {}", i + 1),
+                            message: format!(
+                                "possible unreachable code after return at line {}",
+                                i + 1
+                            ),
                             line: Some(i + 2),
                             code: Some("unreachable-code".to_string()),
                         });
@@ -185,9 +192,7 @@ impl StreamingValidator for SemanticValidator {
 
         // Check banned patterns
         for pattern in &self.banned_patterns {
-            if !pattern.languages.is_empty()
-                && !pattern.languages.contains(&context.language)
-            {
+            if !pattern.languages.is_empty() && !pattern.languages.contains(&context.language) {
                 continue;
             }
 

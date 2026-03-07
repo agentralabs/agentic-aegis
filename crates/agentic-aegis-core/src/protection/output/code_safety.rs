@@ -24,7 +24,8 @@ impl CodeSafetyAnalyzer {
                 category: SecurityCategory::UnsafeSystemCall,
                 description: "destructive system command".to_string(),
                 threat_level: ThreatLevel::Critical,
-                recommendation: "avoid destructive file system commands in generated code".to_string(),
+                recommendation: "avoid destructive file system commands in generated code"
+                    .to_string(),
                 languages: vec![],
             },
             SafetyPattern {
@@ -37,8 +38,10 @@ impl CodeSafetyAnalyzer {
                 languages: vec![],
             },
             SafetyPattern {
-                pattern: Regex::new(r#"(?i)(?:password|secret|token|api_key)\s*=\s*["'][^"']{8,}["']"#)
-                    .unwrap_or_else(|_| Regex::new(r"$^").expect("fallback")),
+                pattern: Regex::new(
+                    r#"(?i)(?:password|secret|token|api_key)\s*=\s*["'][^"']{8,}["']"#,
+                )
+                .unwrap_or_else(|_| Regex::new(r"$^").expect("fallback")),
                 category: SecurityCategory::HardcodedCredential,
                 description: "hardcoded credential".to_string(),
                 threat_level: ThreatLevel::High,
@@ -82,8 +85,10 @@ impl CodeSafetyAnalyzer {
                 languages: vec![Language::JavaScript, Language::TypeScript],
             },
             SafetyPattern {
-                pattern: Regex::new(r#"format!\s*\(\s*"[^"]*\{[^}]*\}[^"]*"\s*,.*\).*(?:query|sql|exec)"#)
-                    .unwrap_or_else(|_| Regex::new(r"$^").expect("fallback")),
+                pattern: Regex::new(
+                    r#"format!\s*\(\s*"[^"]*\{[^}]*\}[^"]*"\s*,.*\).*(?:query|sql|exec)"#,
+                )
+                .unwrap_or_else(|_| Regex::new(r"$^").expect("fallback")),
                 category: SecurityCategory::SqlInjection,
                 description: "potential SQL injection via string formatting".to_string(),
                 threat_level: ThreatLevel::High,
@@ -107,10 +112,7 @@ impl CodeSafetyAnalyzer {
 
             for (line_idx, line) in code.lines().enumerate() {
                 if pattern.pattern.is_match(line) {
-                    let evidence = pattern
-                        .pattern
-                        .find(line)
-                        .map(|m| m.as_str().to_string());
+                    let evidence = pattern.pattern.find(line).map(|m| m.as_str().to_string());
 
                     issues.push(
                         SecurityIssue::new(

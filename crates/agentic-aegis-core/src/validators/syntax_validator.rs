@@ -140,12 +140,12 @@ impl SyntaxValidator {
 
         // Check for unclosed strings
         if in_string {
-            errors.push(ValidationError::error("unclosed string literal".to_string()));
+            errors.push(ValidationError::error(
+                "unclosed string literal".to_string(),
+            ));
         }
         if in_block_comment {
-            errors.push(ValidationError::error(
-                "unclosed block comment".to_string(),
-            ));
+            errors.push(ValidationError::error("unclosed block comment".to_string()));
         }
 
         errors
@@ -188,15 +188,13 @@ impl SyntaxValidator {
                 && !trimmed.ends_with(':')
                 && !trimmed.ends_with('\\')
                 && !trimmed.contains('#')
-                && (!trimmed.contains('(') || trimmed.contains(')')) {
-                    errors.push(
-                        ValidationError::warning(format!(
-                            "possible missing colon at line {}",
-                            idx + 1
-                        ))
+                && (!trimmed.contains('(') || trimmed.contains(')'))
+            {
+                errors.push(
+                    ValidationError::warning(format!("possible missing colon at line {}", idx + 1))
                         .with_location(idx + 1, line.len()),
-                    );
-                }
+                );
+            }
         }
 
         errors

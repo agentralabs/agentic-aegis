@@ -81,7 +81,11 @@ async fn stress_all_validators_sequential_chunks() {
     for chunk in &chunks {
         for v in &validators {
             let result = v.validate_chunk(&ctx, chunk).await.unwrap();
-            assert!(!result.should_stop, "validator {} stopped on chunk", v.name());
+            assert!(
+                !result.should_stop,
+                "validator {} stopped on chunk",
+                v.name()
+            );
         }
         ctx.append_chunk(chunk);
     }
@@ -110,7 +114,8 @@ async fn edge_empty_string_all_validators() {
 async fn edge_unicode_in_code() {
     let v = TokenValidator::new();
     let ctx = ValidationContext::new(SessionId::new(), Language::Rust, "unicode.rs".into());
-    let code = "let emoji = \"\\u{1F600}\\u{1F4A9}\\u{2764}\";\nlet cjk = \"\\u{4E16}\\u{754C}\";\n";
+    let code =
+        "let emoji = \"\\u{1F600}\\u{1F4A9}\\u{2764}\";\nlet cjk = \"\\u{4E16}\\u{754C}\";\n";
     let result = v.validate_chunk(&ctx, code).await.unwrap();
     assert!(result.valid);
 }
@@ -137,7 +142,9 @@ async fn edge_only_comments_rust() {
 async fn edge_single_char_inputs() {
     let v = TokenValidator::new();
     let ctx = ValidationContext::new(SessionId::new(), Language::Rust, "char.rs".into());
-    for ch in ["{", "}", "(", ")", "[", "]", ";", ":", ",", ".", "+", "-", "*", "/"] {
+    for ch in [
+        "{", "}", "(", ")", "[", "]", ";", ":", ",", ".", "+", "-", "*", "/",
+    ] {
         let _ = v.validate_chunk(&ctx, ch).await.unwrap();
     }
 }
@@ -189,7 +196,10 @@ fn stress_rate_limiter_burst() {
     for _ in 0..100 {
         assert!(limiter.check("burst-client").is_allowed());
     }
-    assert!(!limiter.check("burst-client").is_allowed(), "101st request should be limited");
+    assert!(
+        !limiter.check("burst-client").is_allowed(),
+        "101st request should be limited"
+    );
 }
 
 #[test]
@@ -228,7 +238,9 @@ fn stress_output_sanitizer_large_output() {
 fn stress_content_filter_repeated_safe() {
     let filter = ContentFilter::new();
     for _ in 0..1000 {
-        assert!(filter.is_safe("This is perfectly normal programming content about algorithms and data structures"));
+        assert!(filter.is_safe(
+            "This is perfectly normal programming content about algorithms and data structures"
+        ));
     }
 }
 
@@ -255,8 +267,14 @@ fn edge_pii_detector_false_positive_check() {
     // Version numbers should NOT trigger credit card detection
     let code = "version = \"1.2.3\"\nlet port = 8080;";
     let matches = detector.scan(code);
-    let credit_cards: Vec<_> = matches.iter().filter(|m| m.kind == PiiKind::CreditCard).collect();
-    assert!(credit_cards.is_empty(), "version numbers should not be credit cards");
+    let credit_cards: Vec<_> = matches
+        .iter()
+        .filter(|m| m.kind == PiiKind::CreditCard)
+        .collect();
+    assert!(
+        credit_cards.is_empty(),
+        "version numbers should not be credit cards"
+    );
 }
 
 #[test]
@@ -283,10 +301,19 @@ fn edge_redaction_preserves_structure() {
     let detector = PiiDetector::new();
     let input = "Name: John\nEmail: test@example.com\nPhone: 555-123-4567\nEnd.";
     let redacted = detector.redact(input);
-    assert!(redacted.contains("Name: John"), "non-PII should be preserved");
+    assert!(
+        redacted.contains("Name: John"),
+        "non-PII should be preserved"
+    );
     assert!(redacted.contains("End."), "non-PII should be preserved");
-    assert!(!redacted.contains("test@example.com"), "email should be redacted");
-    assert!(!redacted.contains("555-123-4567"), "phone should be redacted");
+    assert!(
+        !redacted.contains("test@example.com"),
+        "email should be redacted"
+    );
+    assert!(
+        !redacted.contains("555-123-4567"),
+        "phone should be redacted"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -298,10 +325,12 @@ async fn stress_create_100_sessions() {
     let mut mgr = SessionManager::new();
     let mut ids = Vec::new();
     for _ in 0..100 {
-        let id = mgr.create_session(SessionConfig {
-            language: Language::Rust,
-            ..Default::default()
-        }).unwrap();
+        let id = mgr
+            .create_session(SessionConfig {
+                language: Language::Rust,
+                ..Default::default()
+            })
+            .unwrap();
         ids.push(id);
     }
     assert_eq!(mgr.session_count(), 100);
@@ -323,11 +352,13 @@ async fn stress_rapid_create_end_cycle() {
 #[tokio::test]
 async fn stress_validate_many_chunks_in_session() {
     let mut mgr = SessionManager::new();
-    let id = mgr.create_session(SessionConfig {
-        language: Language::Rust,
-        max_errors: 1000,
-        ..Default::default()
-    }).unwrap();
+    let id = mgr
+        .create_session(SessionConfig {
+            language: Language::Rust,
+            max_errors: 1000,
+            ..Default::default()
+        })
+        .unwrap();
 
     for i in 0..100 {
         let chunk = format!("let var_{i}: i32 = {i};\n");
@@ -342,15 +373,19 @@ async fn stress_validate_many_chunks_in_session() {
 #[tokio::test]
 async fn stress_session_error_limit() {
     let mut mgr = SessionManager::new();
-    let id = mgr.create_session(SessionConfig {
-        language: Language::Rust,
-        max_errors: 5,
-        ..Default::default()
-    }).unwrap();
+    let id = mgr
+        .create_session(SessionConfig {
+            language: Language::Rust,
+            max_errors: 5,
+            ..Default::default()
+        })
+        .unwrap();
 
     // Send code that generates errors - hardcoded passwords trigger semantic errors
     for _ in 0..10 {
-        let _ = mgr.validate_chunk(&id.to_string(), "let password = \"secret\";\n").await;
+        let _ = mgr
+            .validate_chunk(&id.to_string(), "let password = \"secret\";\n")
+            .await;
     }
 
     let session = mgr.get_session(&id.to_string()).unwrap();
@@ -409,7 +444,10 @@ fn stress_effect_tracker_large_codebase() {
         code.push_str(&format!("let v{i} = compute({i});\n"));
     }
     let effects = tracker.analyze(&code, &Language::Rust);
-    assert!(effects.is_empty(), "pure computation should have no side effects");
+    assert!(
+        effects.is_empty(),
+        "pure computation should have no side effects"
+    );
 }
 
 #[test]
@@ -499,8 +537,12 @@ fn boundary_session_state_all_transitions() {
     for state in &states {
         if state.is_terminal() {
             for target in &states {
-                assert!(!state.can_transition_to(target),
-                    "{:?} should not transition to {:?}", state, target);
+                assert!(
+                    !state.can_transition_to(target),
+                    "{:?} should not transition to {:?}",
+                    state,
+                    target
+                );
             }
         }
     }

@@ -39,7 +39,11 @@ fn test_list_tools_names() {
 fn test_list_tools_have_descriptions() {
     let tools = ToolRegistry::list_tools();
     for tool in &tools {
-        assert!(!tool.description.is_empty(), "tool {} has no description", tool.name);
+        assert!(
+            !tool.description.is_empty(),
+            "tool {} has no description",
+            tool.name
+        );
     }
 }
 
@@ -133,7 +137,11 @@ async fn test_session_create_missing_language() {
         .unwrap();
     // Should return error in content
     assert!(
-        result.get("isError").is_some() || result["content"][0]["text"].as_str().unwrap().contains("error")
+        result.get("isError").is_some()
+            || result["content"][0]["text"]
+                .as_str()
+                .unwrap()
+                .contains("error")
     );
 }
 
@@ -160,7 +168,13 @@ async fn test_validate_complete_missing_code() {
     let result = ToolRegistry::call("aegis_validate_complete", Some(args), &session)
         .await
         .unwrap();
-    assert!(result.get("isError").is_some() || result["content"][0]["text"].as_str().unwrap_or("").contains("error"));
+    assert!(
+        result.get("isError").is_some()
+            || result["content"][0]["text"]
+                .as_str()
+                .unwrap_or("")
+                .contains("error")
+    );
 }
 
 #[tokio::test]
@@ -184,7 +198,10 @@ async fn test_validate_streaming_flow() {
     let chunk_result = ToolRegistry::call("aegis_validate_streaming", Some(chunk_args), &session)
         .await
         .unwrap();
-    assert!(!chunk_result["content"][0]["text"].as_str().unwrap().is_empty());
+    assert!(!chunk_result["content"][0]["text"]
+        .as_str()
+        .unwrap()
+        .is_empty());
 }
 
 #[tokio::test]

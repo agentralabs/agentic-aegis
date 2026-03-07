@@ -217,21 +217,15 @@ impl ToolRegistry {
             "aegis_validate_streaming" => {
                 validation::handle_validate_streaming(&args, session).await
             }
-            "aegis_validate_complete" => {
-                validation::handle_validate_complete(&args, session).await
-            }
+            "aegis_validate_complete" => validation::handle_validate_complete(&args, session).await,
             "aegis_shadow_execute" => shadow::handle_shadow_execute(&args, session).await,
             "aegis_check_input" => security::handle_check_input(&args, session).await,
             "aegis_check_output" => security::handle_check_output(&args, session).await,
             "aegis_session_create" => session_tools::handle_session_create(&args, session).await,
             "aegis_session_status" => session_tools::handle_session_status(&args, session).await,
             "aegis_session_end" => session_tools::handle_session_end(&args, session).await,
-            "aegis_correction_hint" => {
-                validation::handle_correction_hint(&args, session).await
-            }
-            "aegis_confidence_score" => {
-                validation::handle_confidence_score(&args, session).await
-            }
+            "aegis_correction_hint" => validation::handle_correction_hint(&args, session).await,
+            "aegis_confidence_score" => validation::handle_confidence_score(&args, session).await,
             "aegis_rollback" => session_tools::handle_rollback(&args, session).await,
             "aegis_scan_security" => security::handle_scan_security(&args, session).await,
             _ => {

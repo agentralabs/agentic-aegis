@@ -22,12 +22,12 @@ pub async fn handle_validate_streaming(
             message: "session_id is required".to_string(),
         })?;
 
-    let chunk = args
-        .get("chunk")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| McpError::InvalidParams {
-            message: "chunk is required".to_string(),
-        })?;
+    let chunk =
+        args.get("chunk")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| McpError::InvalidParams {
+                message: "chunk is required".to_string(),
+            })?;
 
     let mut guard = session.lock().await;
     let result = guard
@@ -49,12 +49,12 @@ pub async fn handle_validate_complete(
     args: &Value,
     session: &Arc<Mutex<McpSessionManager>>,
 ) -> McpResult<ToolCallResult> {
-    let code = args
-        .get("code")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| McpError::InvalidParams {
-            message: "code is required".to_string(),
-        })?;
+    let code =
+        args.get("code")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| McpError::InvalidParams {
+                message: "code is required".to_string(),
+            })?;
 
     let language_str = args
         .get("language")
@@ -72,12 +72,13 @@ pub async fn handle_validate_complete(
     };
 
     let mut guard = session.lock().await;
-    let session_id = guard
-        .core
-        .create_session(config)
-        .map_err(|e| McpError::ToolExecutionError {
-            message: e.to_string(),
-        })?;
+    let session_id =
+        guard
+            .core
+            .create_session(config)
+            .map_err(|e| McpError::ToolExecutionError {
+                message: e.to_string(),
+            })?;
 
     let result = guard
         .core
@@ -144,12 +145,12 @@ pub async fn handle_confidence_score(
     args: &Value,
     session: &Arc<Mutex<McpSessionManager>>,
 ) -> McpResult<ToolCallResult> {
-    let code = args
-        .get("code")
-        .and_then(|v| v.as_str())
-        .ok_or_else(|| McpError::InvalidParams {
-            message: "code is required".to_string(),
-        })?;
+    let code =
+        args.get("code")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| McpError::InvalidParams {
+                message: "code is required".to_string(),
+            })?;
 
     let language_str = args
         .get("language")

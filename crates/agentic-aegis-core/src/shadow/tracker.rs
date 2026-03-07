@@ -143,7 +143,8 @@ impl Default for EffectTracker {
 }
 
 fn extract_path_hint(line: &str) -> String {
-    let re = Regex::new(r#"["']([^"']+)["']"#).unwrap_or_else(|_| Regex::new(r"$^").expect("fallback"));
+    let re =
+        Regex::new(r#"["']([^"']+)["']"#).unwrap_or_else(|_| Regex::new(r"$^").expect("fallback"));
     re.captures(line)
         .and_then(|c| c.get(1))
         .map(|m| m.as_str().to_string())
@@ -151,7 +152,8 @@ fn extract_path_hint(line: &str) -> String {
 }
 
 fn extract_env_hint(line: &str) -> String {
-    let re = Regex::new(r#"["']([A-Z_]+)["']"#).unwrap_or_else(|_| Regex::new(r"$^").expect("fallback"));
+    let re =
+        Regex::new(r#"["']([A-Z_]+)["']"#).unwrap_or_else(|_| Regex::new(r"$^").expect("fallback"));
     re.captures(line)
         .and_then(|c| c.get(1))
         .map(|m| m.as_str().to_string())

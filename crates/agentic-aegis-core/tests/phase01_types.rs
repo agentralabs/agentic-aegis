@@ -1,8 +1,8 @@
-use agentic_aegis_core::types::ids::*;
 use agentic_aegis_core::types::error::*;
-use agentic_aegis_core::types::validation::*;
-use agentic_aegis_core::types::session::*;
+use agentic_aegis_core::types::ids::*;
 use agentic_aegis_core::types::security::*;
+use agentic_aegis_core::types::session::*;
+use agentic_aegis_core::types::validation::*;
 
 // === ID Tests ===
 
@@ -216,11 +216,7 @@ fn test_language_default() {
 
 #[test]
 fn test_validation_context_new() {
-    let ctx = ValidationContext::new(
-        SessionId::new(),
-        Language::Rust,
-        "test.rs".to_string(),
-    );
+    let ctx = ValidationContext::new(SessionId::new(), Language::Rust, "test.rs".to_string());
     assert_eq!(ctx.language, Language::Rust);
     assert_eq!(ctx.file_path, "test.rs");
     assert!(ctx.accumulated_code.is_empty());
@@ -229,11 +225,7 @@ fn test_validation_context_new() {
 
 #[test]
 fn test_validation_context_append_chunk() {
-    let mut ctx = ValidationContext::new(
-        SessionId::new(),
-        Language::Rust,
-        "test.rs".to_string(),
-    );
+    let mut ctx = ValidationContext::new(SessionId::new(), Language::Rust, "test.rs".to_string());
     ctx.append_chunk("fn main() {\n");
     assert_eq!(ctx.accumulated_code, "fn main() {\n");
     assert_eq!(ctx.chunk_index, 1);
@@ -262,8 +254,7 @@ fn test_validation_error_with_location() {
 
 #[test]
 fn test_validation_error_with_suggestion() {
-    let err = ValidationError::warning("test".to_string())
-        .with_suggestion("fix it".to_string());
+    let err = ValidationError::warning("test".to_string()).with_suggestion("fix it".to_string());
     assert_eq!(err.suggestion, Some("fix it".to_string()));
 }
 
@@ -486,7 +477,10 @@ fn test_threat_level_ordering() {
 
 #[test]
 fn test_security_category_as_str() {
-    assert_eq!(SecurityCategory::PromptInjection.as_str(), "prompt_injection");
+    assert_eq!(
+        SecurityCategory::PromptInjection.as_str(),
+        "prompt_injection"
+    );
     assert_eq!(SecurityCategory::SqlInjection.as_str(), "sql_injection");
     assert_eq!(SecurityCategory::XssAttack.as_str(), "xss_attack");
     assert_eq!(SecurityCategory::PiiExposure.as_str(), "pii_exposure");
@@ -540,13 +534,11 @@ fn test_security_scan_clean() {
 
 #[test]
 fn test_security_scan_with_issues() {
-    let issues = vec![
-        SecurityIssue::new(
-            SecurityCategory::SqlInjection,
-            ThreatLevel::High,
-            "sql".to_string(),
-        ),
-    ];
+    let issues = vec![SecurityIssue::new(
+        SecurityCategory::SqlInjection,
+        ThreatLevel::High,
+        "sql".to_string(),
+    )];
     let scan = SecurityScan::with_issues(issues, 50, 10);
     assert!(!scan.is_safe);
     assert_eq!(scan.overall_threat, ThreatLevel::High);

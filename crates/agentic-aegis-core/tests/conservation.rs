@@ -1,9 +1,7 @@
 use std::time::Duration;
 
 use agentic_aegis_core::cache::LruCache;
-use agentic_aegis_core::metrics::{
-    generate_report, AuditEntry, AuditLog, Layer, TokenMetrics,
-};
+use agentic_aegis_core::metrics::{generate_report, AuditEntry, AuditLog, Layer, TokenMetrics};
 use agentic_aegis_core::query::{
     apply_intent, ChangeType, ExtractionIntent, TokenBudget, VersionedState,
 };
@@ -153,12 +151,26 @@ fn test_conservation_target_07() {
     // Simulate a realistic workload: 30% full, 70% cached
     for _ in 0..30 {
         metrics.record(Layer::Full, 100);
-        log.record(audit("tool", Layer::Full, 100, 0, false, ExtractionIntent::Full));
+        log.record(audit(
+            "tool",
+            Layer::Full,
+            100,
+            0,
+            false,
+            ExtractionIntent::Full,
+        ));
     }
     for _ in 0..70 {
         metrics.record(Layer::Cache, 0);
         metrics.record_savings(100);
-        log.record(audit("tool", Layer::Cache, 0, 100, true, ExtractionIntent::IdsOnly));
+        log.record(audit(
+            "tool",
+            Layer::Cache,
+            0,
+            100,
+            true,
+            ExtractionIntent::IdsOnly,
+        ));
     }
 
     let report = generate_report(&metrics, &log);
@@ -243,7 +255,14 @@ fn test_end_to_end_conservation_flow() {
     let full_cost: u64 = 100;
     budget.spend(full_cost);
     metrics.record(Layer::Full, full_cost);
-    log.record(audit("list", Layer::Full, full_cost, 0, false, ExtractionIntent::Full));
+    log.record(audit(
+        "list",
+        Layer::Full,
+        full_cost,
+        0,
+        false,
+        ExtractionIntent::Full,
+    ));
     cache.insert(key.clone(), state.state().clone());
 
     // === Query 2: Cache hit — zero cost ===
@@ -251,7 +270,14 @@ fn test_end_to_end_conservation_flow() {
     assert!(cached.is_some());
     metrics.record(Layer::Cache, 0);
     metrics.record_savings(full_cost);
-    log.record(audit("list", Layer::Cache, 0, full_cost, true, ExtractionIntent::IdsOnly));
+    log.record(audit(
+        "list",
+        Layer::Cache,
+        0,
+        full_cost,
+        true,
+        ExtractionIntent::IdsOnly,
+    ));
 
     // === Query 3: Scoped query (IdsOnly) ===
     let data = cached.unwrap();
@@ -265,10 +291,20 @@ fn test_end_to_end_conservation_flow() {
     budget.spend(scoped_cost);
     metrics.record(Layer::Scoped, scoped_cost);
     metrics.record_savings(full_cost.saturating_sub(scoped_cost));
-    log.record(audit("list", Layer::Scoped, scoped_cost, full_cost - scoped_cost, false, ExtractionIntent::IdsOnly));
+    log.record(audit(
+        "list",
+        Layer::Scoped,
+        scoped_cost,
+        full_cost - scoped_cost,
+        false,
+        ExtractionIntent::IdsOnly,
+    ));
 
     // === Mutation: update state and invalidate cache ===
-    state.record_change(ChangeType::Updated, vec!["item1".to_string(), "item2".to_string()]);
+    state.record_change(
+        ChangeType::Updated,
+        vec!["item1".to_string(), "item2".to_string()],
+    );
     cache.invalidate(&key);
 
     // === Query 4: Delta query — only the change ===
@@ -279,7 +315,14 @@ fn test_end_to_end_conservation_flow() {
     budget.spend(delta_cost);
     metrics.record(Layer::Delta, delta_cost);
     metrics.record_savings(full_cost.saturating_sub(delta_cost));
-    log.record(audit("list", Layer::Delta, delta_cost, full_cost - delta_cost, false, ExtractionIntent::IdsOnly));
+    log.record(audit(
+        "list",
+        Layer::Delta,
+        delta_cost,
+        full_cost - delta_cost,
+        false,
+        ExtractionIntent::IdsOnly,
+    ));
 
     // === Verify conservation ===
     let report = generate_report(&metrics, &log);

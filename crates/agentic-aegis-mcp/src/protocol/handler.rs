@@ -18,10 +18,7 @@ impl ProtocolHandler {
 
     pub async fn handle_request(&self, request: Value) -> Value {
         let id = request.get("id").cloned().unwrap_or(Value::Null);
-        let method = request
-            .get("method")
-            .and_then(|v| v.as_str())
-            .unwrap_or("");
+        let method = request.get("method").and_then(|v| v.as_str()).unwrap_or("");
 
         match method {
             "initialize" => self.handle_initialize(id),
@@ -79,7 +76,10 @@ impl ProtocolHandler {
     }
 
     async fn handle_tool_call(&self, id: Value, request: &Value) -> Value {
-        let params = request.get("params").cloned().unwrap_or(serde_json::json!({}));
+        let params = request
+            .get("params")
+            .cloned()
+            .unwrap_or(serde_json::json!({}));
 
         let tool_name = match params.get("name").and_then(|v| v.as_str()) {
             Some(name) => name.to_string(),

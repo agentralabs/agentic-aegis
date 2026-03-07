@@ -156,23 +156,26 @@ impl TokenValidator {
         warnings
     }
 
-    fn check_language_specific(
-        &self,
-        code: &str,
-        language: &Language,
-    ) -> Vec<ValidationError> {
+    fn check_language_specific(&self, code: &str, language: &Language) -> Vec<ValidationError> {
         let mut errors = Vec::new();
 
         match language {
             Language::Rust => {
                 for (idx, line) in code.lines().enumerate() {
                     let trimmed = line.trim();
-                    if trimmed.starts_with("fn ") && trimmed.contains("->")
-                        && !trimmed.ends_with('{') && !trimmed.ends_with(';') && !trimmed.ends_with(',')
-                            && !trimmed.contains("where") {
-                                // Could be a multi-line function signature, just warn
-                            }
-                    if trimmed == "unsafe" || trimmed.starts_with("unsafe {") || trimmed.starts_with("unsafe fn") {
+                    if trimmed.starts_with("fn ")
+                        && trimmed.contains("->")
+                        && !trimmed.ends_with('{')
+                        && !trimmed.ends_with(';')
+                        && !trimmed.ends_with(',')
+                        && !trimmed.contains("where")
+                    {
+                        // Could be a multi-line function signature, just warn
+                    }
+                    if trimmed == "unsafe"
+                        || trimmed.starts_with("unsafe {")
+                        || trimmed.starts_with("unsafe fn")
+                    {
                         errors.push(
                             ValidationError::warning(format!(
                                 "unsafe code detected at line {}",
@@ -238,15 +241,10 @@ impl StreamingValidator for TokenValidator {
         let nesting_warnings = self.check_nesting_depth(&accumulated);
         let lang_errors = self.check_language_specific(&accumulated, &context.language);
 
-        let all_errors: Vec<ValidationError> = bracket_errors
-            .into_iter()
-            .chain(lang_errors)
-            .collect();
+        let all_errors: Vec<ValidationError> =
+            bracket_errors.into_iter().chain(lang_errors).collect();
 
-        let all_warnings: Vec<_> = line_warnings
-            .into_iter()
-            .chain(nesting_warnings)
-            .collect();
+        let all_warnings: Vec<_> = line_warnings.into_iter().chain(nesting_warnings).collect();
 
         let has_hard_errors = all_errors
             .iter()

@@ -1,5 +1,5 @@
-use agentic_aegis_core::bridges::*;
 use agentic_aegis_core::bridges::hydra::*;
+use agentic_aegis_core::bridges::*;
 
 // === NoOp Bridge Tests ===
 
@@ -41,7 +41,10 @@ fn test_noop_identity_bridge() {
 fn test_noop_memory_bridge() {
     let bridge = NoOpBridges;
     assert!(bridge.store_validation_context("session1", "ctx").is_ok());
-    assert!(bridge.recall_validation_pattern("pattern").unwrap().is_none());
+    assert!(bridge
+        .recall_validation_pattern("pattern")
+        .unwrap()
+        .is_none());
 }
 
 #[test]
@@ -54,8 +57,12 @@ fn test_noop_cognition_bridge() {
 #[test]
 fn test_noop_comm_bridge() {
     let bridge = NoOpBridges;
-    assert!(bridge.broadcast_validation_event("event", "payload").is_ok());
-    assert!(bridge.notify_validation_failure("session1", "error").is_ok());
+    assert!(bridge
+        .broadcast_validation_event("event", "payload")
+        .is_ok());
+    assert!(bridge
+        .notify_validation_failure("session1", "error")
+        .is_ok());
 }
 
 #[test]

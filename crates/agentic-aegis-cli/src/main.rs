@@ -1,7 +1,11 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "aegis", version, about = "AgenticAegis - Streaming validation for AI-generated code")]
+#[command(
+    name = "aegis",
+    version,
+    about = "AgenticAegis - Streaming validation for AI-generated code"
+)]
 struct Cli {
     #[arg(long, default_value = "text")]
     format: String,
@@ -165,7 +169,11 @@ fn main() {
                 println!("Chunk length: {} bytes", chunk.len());
                 println!("Status: validation complete");
             }
-            ValidateAction::Complete { code, file, language } => {
+            ValidateAction::Complete {
+                code,
+                file,
+                language,
+            } => {
                 let source = if let Some(c) = code {
                     c
                 } else if let Some(f) = file {
@@ -201,7 +209,10 @@ fn main() {
             }
         },
         Some(Commands::Session { action }) => match action {
-            SessionAction::Create { language, file_path } => {
+            SessionAction::Create {
+                language,
+                file_path,
+            } => {
                 let fp = file_path.unwrap_or_else(|| "none".to_string());
                 println!("Creating session: language={}, file={}", language, fp);
             }
@@ -234,10 +245,7 @@ fn main() {
                 println!("Generating hint for {} error: {}", language, error);
             }
         },
-        Some(Commands::Rollback {
-            session_id,
-            target,
-        }) => {
+        Some(Commands::Rollback { session_id, target }) => {
             let t = target.unwrap_or_else(|| "latest".to_string());
             println!("Rolling back session {} to {}", session_id, t);
         }
