@@ -60,8 +60,6 @@ crates/agentic-aegis-mcp/docs/
 crates/agentic-aegis-mcp/scripts/
 
 # Internal / not for public repo
-CLAUDE.md
-sister.manifest.json
 
 # Claude Code
 .claude/
