@@ -1,0 +1,31 @@
+[package]
+name = "agentic-aegis-mcp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "MCP server for AgenticAegis streaming validation"
+
+[features]
+default = ["stdio"]
+stdio = []
+
+[dependencies]
+agentic-aegis-core = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+blake3 = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+chrono = { workspace = true }
+
+[[bin]]
+name = "agentic-aegis-mcp"
+path = "src/main.rs"
+
+[lib]
+name = "agentic_aegis_mcp"
+path = "src/lib.rs"

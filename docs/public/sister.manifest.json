@@ -1,0 +1,27 @@
+{
+  "key": "aegis",
+  "name": "AgenticAegis",
+  "version": "0.1.0",
+  "include_landing": true,
+  "page_ids": [
+    "experience-with-vs-without",
+    "quickstart",
+    "installation",
+    "command-surface",
+    "runtime-install-sync",
+    "integration-guide",
+    "concepts",
+    "api-reference",
+    "benchmarks",
+    "faq",
+    "architecture",
+    "cli-reference",
+    "configuration",
+    "ffi-reference",
+    "mcp-tools",
+    "mcp-resources",
+    "mcp-prompts",
+    "troubleshooting"
+  ],
+  "slug_by_id": {}
+}

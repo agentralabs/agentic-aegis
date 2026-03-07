@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 360" role="img" aria-label="AgenticAegis terminal pane">
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#b8b6ae"/>
+    </pattern>
+  </defs>
+  <rect width="1400" height="360" fill="#f2f1ea"/>
+  <rect width="1400" height="360" fill="url(#grid)"/>
+  <rect x="20" y="20" width="1360" height="320" fill="none" stroke="#111111" stroke-width="2"/>
+
+  <line x1="20" y1="62" x2="1380" y2="62" stroke="#111111" stroke-width="2"/>
+  <text x="40" y="48" font-family="'JetBrains Mono', monospace" font-size="14" fill="#5f5c53" letter-spacing="2"> // AGENTRA_LABS: QUICKSTART</text>
+  <rect x="1318" y="36" width="8" height="8" fill="#ea580c"/>
+  <text x="1336" y="48" font-family="'JetBrains Mono', monospace" font-size="12" fill="#5f5c53" letter-spacing="2">002</text>
+
+  <!-- Terminal panel left -->
+  <rect x="46" y="84" width="660" height="244" fill="none" stroke="#111111" stroke-width="2"/>
+  <rect x="46" y="84" width="660" height="30" fill="#111111"/>
+  <text x="62" y="104" font-family="'JetBrains Mono', monospace" font-size="11" fill="#f2f1ea" letter-spacing="2">VALIDATE + SESSION</text>
+
+  <text x="62" y="134" font-family="'JetBrains Mono', monospace" font-size="13" fill="#ea580c">$</text>
+  <text x="78" y="134" font-family="'JetBrains Mono', monospace" font-size="13" fill="#111111"> aegis validate --streaming --input code.rs</text>
+  <text x="62" y="154" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Token stream: 1,247 tokens validated</text>
+  <text x="62" y="172" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Syntax: OK  Types: OK  Safety: OK</text>
+  <text x="62" y="190" font-family="'JetBrains Mono', monospace" font-size="13" fill="#ea580c">  Confidence: 0.97  Status: PASS</text>
+
+  <text x="62" y="216" font-family="'JetBrains Mono', monospace" font-size="13" fill="#ea580c">$</text>
+  <text x="78" y="216" font-family="'JetBrains Mono', monospace" font-size="13" fill="#111111"> aegis session create --mode strict</text>
+  <text x="62" y="236" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Session: ses-4f2b... (strict mode)</text>
+  <text x="62" y="254" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Validators: token, syntax, type, safety, pii</text>
+
+  <text x="62" y="280" font-family="'JetBrains Mono', monospace" font-size="13" fill="#ea580c">$</text>
+  <text x="78" y="280" font-family="'JetBrains Mono', monospace" font-size="13" fill="#111111"> aegis session status ses-4f2b</text>
+  <text x="62" y="300" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Active: 3 checks  Violations: 0  Uptime: 4m 12s</text>
+
+  <!-- Terminal panel right -->
+  <rect x="726" y="84" width="654" height="244" fill="none" stroke="#111111" stroke-width="2"/>
+  <rect x="726" y="84" width="654" height="30" fill="#111111"/>
+  <text x="742" y="104" font-family="'JetBrains Mono', monospace" font-size="11" fill="#f2f1ea" letter-spacing="2">SCAN + ROLLBACK</text>
+
+  <text x="742" y="134" font-family="'JetBrains Mono', monospace" font-size="13" fill="#ea580c">$</text>
+  <text x="758" y="134" font-family="'JetBrains Mono', monospace" font-size="13" fill="#111111"> aegis scan --security --input payload.json</text>
+  <text x="742" y="154" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Prompt injection: NONE</text>
+  <text x="742" y="172" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  PII detected: 0 fields</text>
+  <text x="742" y="190" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Payload: CLEAN  Rate limit: OK</text>
+
+  <text x="742" y="216" font-family="'JetBrains Mono', monospace" font-size="13" fill="#ea580c">$</text>
+  <text x="758" y="216" font-family="'JetBrains Mono', monospace" font-size="13" fill="#111111"> aegis shadow execute --code "fn main() {}"</text>
+  <text x="742" y="236" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Shadow compile: OK (0 errors, 0 warnings)</text>
+  <text x="742" y="254" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Sandbox exec: 12ms  Effects: none detected</text>
+
+  <text x="742" y="280" font-family="'JetBrains Mono', monospace" font-size="13" fill="#ea580c">$</text>
+  <text x="758" y="280" font-family="'JetBrains Mono', monospace" font-size="13" fill="#111111"> aegis rollback --session ses-4f2b --to checkpoint-2</text>
+  <text x="742" y="300" font-family="'JetBrains Mono', monospace" font-size="13" fill="#5f5c53">  Rolled back: 3 changes  State: checkpoint-2 restored</text>
+</svg>

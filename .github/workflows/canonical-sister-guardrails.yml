@@ -1,0 +1,29 @@
+name: Canonical Sister Guardrails
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  canonical-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check canonical consistency
+        run: bash scripts/check-canonical-consistency.sh
+      - name: Verify sister manifest
+        run: |
+          test -f docs/public/sister.manifest.json || { echo "Missing sister.manifest.json"; exit 1; }
+          python3 -c "import json; json.load(open('docs/public/sister.manifest.json'))" || { echo "Invalid JSON"; exit 1; }
+      - name: Verify docs frontmatter
+        run: |
+          for f in docs/public/*.md; do
+            head -1 "$f" | grep -q '^---$' || { echo "Missing frontmatter in $f"; exit 1; }
+          done
+      - name: Verify SVG assets
+        run: |
+          for f in assets/github-hero-pane.svg assets/github-terminal-pane.svg assets/architecture-agentra.svg assets/benchmark-chart.svg; do
+            test -f "$f" || { echo "Missing $f"; exit 1; }
+          done
