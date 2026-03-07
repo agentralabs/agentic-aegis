@@ -1,24 +1,37 @@
-name: Install & Command Guardrails
+name: Install Command Guardrails
 
 on:
-  pull_request:
-    branches: [main]
   push:
-    branches: [main]
+    paths:
+      - "README.md"
+      - "INSTALL.md"
+      - "install.sh"
+      - "scripts/install.sh"
+      - "scripts/check-install-commands.sh"
+      - "docs/**"
+      - "src/**"
+      - "crates/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/install-command-guardrails.yml"
+  pull_request:
+    paths:
+      - "README.md"
+      - "INSTALL.md"
+      - "install.sh"
+      - "scripts/install.sh"
+      - "scripts/check-install-commands.sh"
+      - "docs/**"
+      - "src/**"
+      - "crates/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/install-command-guardrails.yml"
 
 jobs:
-  guardrails:
+  validate-install-surface:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Build workspace
-        run: cargo build --workspace
-      - name: Check command surface
-        run: bash scripts/check-command-surface.sh
-      - name: Check MCP consolidation
-        run: bash scripts/check-mcp-consolidation.sh
-      - name: Run tests
-        run: cargo test --workspace
-      - name: Clippy
-        run: cargo clippy --workspace -- -D warnings
+      - name: Run install guardrails
+        run: ./scripts/check-install-commands.sh

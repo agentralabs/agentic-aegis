@@ -127,6 +127,8 @@ assert_file "assets/github-terminal-pane.svg"
 # ── 3. Git tracking validation ──────────────────────────────────────────────
 
 assert_not_tracked "ECOSYSTEM-CONVENTIONS.md"
+assert_not_tracked "CLAUDE.md"
+assert_not_tracked "sister.manifest.json"
 assert_no_tracked_prefix "docs/internal/*"
 
 # ── 4. CANONICAL_SISTER_KIT.md section headers ──────────────────────────────
@@ -200,9 +202,10 @@ for doc in "${FRONTMATTER_BASELINE[@]}"; do
 done
 
 if [ ${#FRONTMATTER_EXTRA[@]} -gt 0 ]; then
-  for doc in "${FRONTMATTER_EXTRA[@]}"; do
-    assert_frontmatter_status_stable "$doc"
-  done
+for doc in "${FRONTMATTER_EXTRA[@]:-}"; do
+  [ -n "$doc" ] || continue
+  assert_frontmatter_status_stable "$doc"
+done
 fi
 
 # ── 10. README canonical layout ─────────────────────────────────────────────
