@@ -16,7 +16,7 @@ homepage = "https://agentralabs.tech"
 authors = ["Agentra Labs <contact@agentralabs.tech>"]
 
 [workspace.dependencies]
-agentic-aegis-core = { path = "crates/agentic-aegis-core" }
+agentic-aegis-core = { path = "crates/agentic-aegis-core", version = "0.1.0" }
 agentic-sdk = "0.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
