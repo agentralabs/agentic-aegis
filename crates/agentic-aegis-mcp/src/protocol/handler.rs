@@ -7,6 +7,8 @@ use crate::session::McpSessionManager;
 use crate::tools::registry::ToolRegistry;
 use crate::types::McpError;
 
+use super::compact;
+
 pub struct ProtocolHandler {
     session: Arc<Mutex<McpSessionManager>>,
 }
@@ -54,7 +56,12 @@ impl ProtocolHandler {
     }
 
     fn handle_list_tools(&self, id: Value) -> Value {
-        let tools = ToolRegistry::list_tools();
+        let tools = if compact::is_compact_mode() {
+            compact::compact_tool_definitions()
+        } else {
+            ToolRegistry::list_tools()
+        };
+
         let tool_list: Vec<Value> = tools
             .iter()
             .map(|t| {
@@ -92,6 +99,21 @@ impl ProtocolHandler {
         };
 
         let arguments = params.get("arguments").cloned();
+
+        // Normalize compact facade calls to underlying tool names
+        let (tool_name, arguments) = if compact::is_compact_facade(&tool_name) {
+            match compact::normalize_compact_call(&tool_name, &arguments) {
+                Some((real_name, real_args)) => (real_name, real_args),
+                None => {
+                    return McpError::InvalidParams {
+                        message: "invalid operation for facade".to_string(),
+                    }
+                    .to_json_rpc_error(id);
+                }
+            }
+        } else {
+            (tool_name, arguments)
+        };
 
         match ToolRegistry::call(&tool_name, arguments, &self.session).await {
             Ok(result) => {
